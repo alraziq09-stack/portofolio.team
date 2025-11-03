@@ -2,13 +2,159 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Portofolio Tim — Futuristic Dark</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tim Kreatif – Portofolio & Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- ROOT & COMMON ---------- */
+    :root{
+      --bg:#07060a;
+      --panel:#0b0f16;
+      --glass: rgba(255,255,255,0.03);
+      --muted: rgba(255,255,255,0.6);
+      --accent: #6ee7ff;
+      --accent-2: #8b5cf6;
+      --glow: 0 6px 30px rgba(110,231,255,0.06);
+      --radius:14px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;color:#e6eef8;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);overflow-x:hidden;}
+
+    /* ---------- LOGIN OVERLAY (senada portofolio) ---------- */
+    #loginOverlay{
+      position:fixed;inset:0;z-index:999;
+      display:flex;align-items:center;justify-content:center;
+      background:radial-gradient(1200px 400px at 50% 50%, rgba(139,92,246,0.06), transparent),
+                linear-gradient(180deg,var(--bg), #06070b);
+    }
+    .login-card{
+      width:90%;max-width:420px;
+      background:var(--panel);
+      border:1px solid var(--glass);
+      border-radius:calc(var(--radius)*2);
+      padding:2.5rem 2rem;
+      box-shadow:var(--glow), 0 25px 50px -12px rgba(0,0,0,.5);
+      opacity:0;transform:translateY(30px);
+      animation:slideUp .7s forwards;
+    }
+    @keyframes slideUp{to{opacity:1;transform:translateY(0);}}
+    .login-card h1{font-size:1.75rem;font-weight:600;margin-bottom:.25rem;}
+    .login-card .subtitle{font-size:.9rem;color:var(--muted);margin-bottom:2rem;}
+
+    /* input field */
+    .field{position:relative;margin-bottom:1.5rem;}
+    .field input{
+      width:100%;background:transparent;border:none;border-bottom:2px solid rgba(255,255,255,.15);
+      padding:.75rem 0;font-size:1rem;outline:none;transition:border-color .3s;
+    }
+    .field input:focus{border-color:var(--accent);}
+    .field label{position:absolute;top:.75rem;left:0;color:var(--muted);transition:all .2s;}
+    .field input:focus+label,.field input:not(:placeholder-shown)+label{
+      top:-.75rem;font-size:.75rem;color:var(--accent);
+    }
+
+    /* checkbox & link */
+    .extras{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;margin-bottom:2rem;}
+    .check{display:flex;align-items:center;gap:.5rem;}
+    .link{color:var(--muted);transition:color .2s;}
+    .link:hover{color:var(--accent);}
+
+    /* login button */
+    .btnLogin{
+      width:100%;height:44px;border:none;border-radius:var(--radius);
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#041026;font-weight:700;cursor:pointer;
+      transition:transform .2s, box-shadow .2s;
+    }
+    .btnLogin:hover{transform:scale(1.02);box-shadow:0 0 20px rgba(110,231,255,.35);}
+    .btnLogin:active{transform:scale(.98);}
+
+    /* stagger children */
+    .login-card>*{opacity:0;animation:fadeIn .5s forwards;}
+    .login-card>*:nth-child(1){animation-delay:.1s;}
+    .login-card>*:nth-child(2){animation-delay:.2s;}
+    .login-card>*:nth-child(3){animation-delay:.3s;}
+    .login-card>*:nth-child(4){animation-delay:.4s;}
+    .login-card>*:nth-child(5){animation-delay:.5s;}
+    .login-card>*:nth-child(6){animation-delay:.6s;}
+    @keyframes fadeIn{to{opacity:1;}}
+
+    /* ---------- PORTFOLIO (dari style.css Anda) ---------- */
+    .page{display:none;flex-direction:column;min-height:100vh;}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px;}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;backdrop-filter:blur(6px);position:sticky;top:0;z-index:40;}
+    .brand{display:flex;gap:12px;align-items:center;}
+    .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent-2),var(--accent));display:flex;align-items:center;justify-content:center;font-weight:700;color:#041026;box-shadow:var(--glow);}
+    .nav a{margin-left:18px;color:var(--muted);padding:8px;border-radius:8px;transition:all .18s;}
+    .nav a:hover{color:var(--accent);transform:translateY(-2px);}
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-top:22px;padding:28px;border-radius:var(--radius);box-shadow:0 10px 40px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);}
+    .hero-title{font-size:36px;margin:8px 0;line-height:1.02;}
+    .hero-desc{color:var(--muted);max-width:60%;}
+    .hero-actions{display:flex;gap:12px;margin-top:18px;}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;transition:all 0.3s ease;}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#041026;box-shadow:0 8px 30px rgba(139,92,246,0.08);}
+    .btn.outline{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);}
+    .section{margin-top:40px;padding:18px 0;}
+    .section-head h2{font-size:20px;margin:0;}
+    .section-head .muted{color:var(--muted);margin-top:6px;}
+    .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:18px;}
+    .member-card{display:flex;gap:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;cursor:pointer;transition:transform .22s, box-shadow .22s;}
+    .member-card:hover{transform:translateY(-8px) rotateX(2deg) scale(1.02);box-shadow:0 18px 50px rgba(13,21,32,0.6);}
+    .card-media img{width:140px;height:140px;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,0.04);}
+    .card-body h3{margin:0 0 6px;}
+    .role{font-size:13px;color:var(--accent-2);font-weight:700;}
+    .bio{margin-top:6px;color:var(--muted);}
+    .card-actions{display:flex;gap:10px;margin-top:12px;}
+    .btn.small{padding:8px 10px;font-size:13px;border-radius:8px;}
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:18px;}
+    .project-card{border-radius:12px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);box-shadow:0 8px 30px rgba(2,6,23,0.6);transition:transform 0.4s ease, box-shadow 0.3s ease;}
+    .project-card:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 8px 16px rgba(255,255,255,0.1);}
+    .project-thumb img{width:100%;height:160px;object-fit:cover;display:block;}
+    .project-body{padding:12px;}
+    .contact-form{max-width:820px;margin:18px auto;padding:18px;border-radius:12px;}
+    .field-row{display:flex;gap:12px;}
+    .field-row input{flex:1;}
+    input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8;}
+    textarea{min-height:120px;resize:vertical;}
+    .form-actions{display:flex;justify-content:space-between;align-items:center;margin-top:12px;}
+    .footer{padding:18px 24px;margin-top:30px;border-top:1px solid rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;color:var(--muted);}
+    @keyframes fadeSlideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+    @media(max-width:980px){.hero{grid-template-columns:1fr;gap:18px;}.hero-desc{max-width:100%;}}
+    @media(max-width:600px){.nav{display:none;}.field-row{flex-direction:column;}.card-media img{width:100px;height:100px;}}
+  </style>
 </head>
 <body>
-  <div class="page">
+  <!-- ---------- LOGIN OVERLAY ---------- -->
+  <div id="loginOverlay">
+    <form class="login-card" id="loginForm">
+      <h1>Welcome Back</h1>
+      <p class="subtitle">Sign in to your account</p>
+
+      <label class="field">
+        <input type="text" required autocomplete="username" placeholder=" " />
+        <label>Username</label>
+      </label>
+
+      <label class="field">
+        <input type="password" required autocomplete="current-password" placeholder=" " />
+        <label>Password</label>
+      </label>
+
+      <div class="extras">
+        <label class="check">
+          <input type="checkbox" />
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="link">Forgot password?</a>
+      </div>
+
+      <button class="btnLogin" type="submit">Login</button>
+    </form>
+  </div>
+
+  <!-- ---------- PORTFOLIO PAGE ---------- -->
+  <div class="page" id="portfolioPage" style="display:none;">
     <header class="topbar">
       <div class="brand">
         <div class="logo">KT</div>
@@ -43,174 +189,165 @@
         </div>
       </section>
 
-      <!-- TEAM -->
       <section id="team" class="section">
         <div class="section-head">
           <h2>Anggota Tim</h2>
           <p class="muted">Klik "Lihat Profil" untuk melihat portofolio tiap anggota.</p>
         </div>
-
         <div class="team-grid">
-          <article class="member-card" data-member="Al Raziq">
-            <div class="card-media">
-              <img src="images/al1.jpg" alt="Al Raziq">
-            </div>
+          <!-- 7 cards example -->
+          <article class="member-card">
+            <div class="card-media"><img src="images/al1.jpg" alt="Al" /></div>
             <div class="card-body">
               <h3>Alraziq</h3>
-              <p class="role muted">Back-end Developer</p>
-              <p class="bio muted short">Spesialisasi React, animasi UI, dan desain interaksi. Suka eksperimen micro-interactions.</p>
-              <div class="card-actions">
-                <a href="al.html" class="btn small">Lihat Profil</a>
-              </div>
+              <p class="role">Back-end Developer</p>
+              <p class="bio muted">Spesialisasi React, animasi UI, dan desain interaksi.</p>
+              <div class="card-actions"><a href="al.html" class="btn small">Lihat Profil</a></div>
             </div>
           </article>
-
-          <article class="member-card" data-member="Askyna">
-            <div class="card-media"><img src="images/askya.jpg" alt="Askyandini"></div>
+          <article class="member-card">
+            <div class="card-media"><img src="images/askya.jpg" alt="Askyna" /></div>
             <div class="card-body">
               <h3>Askyna</h3>
-              <p class="role muted">UI/UX Designer</p>
-              <p class="bio muted short">Mendesain antarmuka yang mudah dipakai dan estetis, fokus pada research & prototyping.</p>
-              <div class="card-actions">
-                <a href="askyna.html" class="btn small">Lihat Profil</a>
-              </div>
+              <p class="role">UI/UX Designer</p>
+              <p class="bio muted">Fokus pada research & prototyping, ahli Figma.</p>
+              <div class="card-actions"><a href="askyna.html" class="btn small">Lihat Profil</a></div>
             </div>
           </article>
-
-          <article class="member-card" data-member="Keyla">
-            <div class="card-media"><img src="images/kela.jpg" alt="Keyla"></div>
+          <article class="member-card">
+            <div class="card-media"><img src="images/kela.jpg" alt="Keyla" /></div>
             <div class="card-body">
               <h3>Keyla</h3>
-              <p class="role muted">Back-end Developer</p>
-              <p class="bio muted short">Bangun API handal dan arsitektur data. Suka optimasi performa dan DB design.</p>
-              <div class="card-actions">
-                <a href="kela.html" class="btn small">Lihat Profil</a>
-              </div>
+              <p class="role">Back-end Developer</p>
+              <p class="bio muted">Bangun API handal dan arsitektur data.</p>
+              <div class="card-actions"><a href="kela.html" class="btn small">Lihat Profil</a></div>
             </div>
           </article>
-
-          <article class="member-card" data-member="Khafidz">
-            <div class="card-media"><img src="images/khafidz.jpg" alt="Khafidz"></div>
+          <article class="member-card">
+            <div class="card-media"><img src="images/khafidz.jpg" alt="Khafidz" /></div>
             <div class="card-body">
               <h3>Khafidz</h3>
-              <p class="role muted">Product Designer</p>
-              <p class="bio muted short">Memimpin product discovery dan desain end-to-end dari ide sampai MVP.</p>
-              <div class="card-actions">
-                <a href="khafidz.html" class="btn small">Lihat Profil</a>
-              </div>
+              <p class="role">Product Designer</p>
+              <p class="bio muted">Memimpin product discovery sampai MVP.</p>
+              <div class="card-actions"><a href="khafidz.html" class="btn small">Lihat Profil</a></div>
             </div>
           </article>
-
-          <article class="member-card" data-member="Ata">
-            <div class="card-media"><img src="images/ata.jpg" alt="Ata"></div>
+          <article class="member-card">
+            <div class="card-media"><img src="images/ata.jpg" alt="Ata" /></div>
             <div class="card-body">
               <h3>Ata</h3>
-              <p class="role muted">Content Creator</p>
-              <p class="bio muted short">Strategi konten, copywriting, dan kampanye sosial media yang engaging.</p>
-              <div class="card-actions">
-                <a href="ata.html" class="btn small">Lihat Profil</a>
-              </div>
+              <p class="role">Content Creator</p>
+              <p class="bio muted">Strategi konten & copywriting yang engaging.</p>
+              <div class="card-actions"><a href="ata.html" class="btn small">Lihat Profil</a></div>
             </div>
           </article>
-
-          <article class="member-card" data-member="Luna">
-            <div class="card-media"><img src="images/luna.jpg" alt="Luna"></div>
+          <article class="member-card">
+            <div class="card-media"><img src="images/luna.jpg" alt="Luna" /></div>
             <div class="card-body">
               <h3>Luna</h3>
-              <p class="role muted">DevOps / SRE</p>
-              <p class="bio muted short">Automasi deployment, monitoring & reliability engineer untuk skala produk.</p>
-              <div class="card-actions">
-                <a href="luna.html" class="btn small">Lihat Profil</a>
-              </div>
+              <p class="role">DevOps / SRE</p>
+              <p class="bio muted">Automasi deployment & monitoring produk.</p>
+              <div class="card-actions"><a href="luna.html" class="btn small">Lihat Profil</a></div>
             </div>
           </article>
-
-          <article class="member-card" data-member="Avi">
-            <div class="card-media"><img src="images/avi.jpg" alt="Avi"></div>
+          <article class="member-card">
+            <div class="card-media"><img src="images/avi.jpg" alt="Avi" /></div>
             <div class="card-body">
               <h3>Avi</h3>
-              <p class="role muted">QA & Research</p>
-              <p class="bio muted short">Pengujian kualitas produk dan validasi UX melalui user testing yang terstruktur.</p>
-              <div class="card-actions">
-                <a href="avi.html" class="btn small">Lihat Profil</a>
-              </div>
+              <p class="role">QA & Research</p>
+              <p class="bio muted">Pengujian kualitas & user testing terstruktur.</p>
+              <div class="card-actions"><a href="avi.html" class="btn small">Lihat Profil</a></div>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- PROJECTS -->
       <section id="projects" class="section">
         <div class="section-head">
           <h2>Highlight Projects</h2>
-          <p class="muted">Beberapa proyek terbaik dari tim kami — case study singkat tersedia di profil tiap anggota.</p>
+          <p class="muted">Beberapa proyek terbaik dari tim kami.</p>
         </div>
-
         <div class="projects-grid">
           <article class="project-card">
-            <div class="project-thumb"><img src="assets/images/p-al-1.jpg" alt="Project 1"></div>
+            <div class="project-thumb"><img src="assets/images/p-al-1.jpg" alt="Project 1" /></div>
             <div class="project-body">
               <h3>Portal Sekolah Interaktif</h3>
-              <p class="muted">Platform informasi dan manajemen kegiatan sekolah dengan modul admin.</p>
+              <p class="muted">Platform informasi & manajemen kegiatan sekolah.</p>
             </div>
           </article>
-
           <article class="project-card">
-            <div class="project-thumb"><img src="assets/images/p-al-2.jpg" alt="Project 2"></div>
+            <div class="project-thumb"><img src="assets/images/p-al-2.jpg" alt="Project 2" /></div>
             <div class="project-body">
               <h3>Aplikasi To-Do Gamified</h3>
-              <p class="muted">Aplikasi produktivitas dengan elemen gamifikasi untuk pelajar.</p>
+              <p class="muted">Produktivitas dengan elemen gamifikasi.</p>
             </div>
           </article>
-
           <article class="project-card">
-            <div class="project-thumb"><img src="assets/images/p-al-3.jpg" alt="Project 3"></div>
+            <div class="project-thumb"><img src="assets/images/p-al-3.jpg" alt="Project 3" /></div>
             <div class="project-body">
               <h3>Kampanye Konten 50k Reach</h3>
-              <p class="muted">Strategi konten & eksekusi sosial media untuk awareness kampus.</p>
+              <p class="muted">Strategi konten untuk awareness kampus.</p>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- CONTACT -->
       <section id="contact" class="section contact-section">
         <div class="section-head">
           <h2>Pesan</h2>
-          <p class="muted">Ingin Memberi masukan/kritikan? Kirim pesan disini</p>
+          <p class="muted">Ingin memberi masukan/kritik? Kirim pesan di sini.</p>
         </div>
-
         <form id="contactForm" class="contact-form glass">
           <div class="field-row">
-            <input type="text" id="nama" placeholder="Nama" required>
-            <input type="email" id="email" placeholder="Email" required>
+            <input type="text" id="nama" placeholder="Nama" required />
+            <input type="email" id="email" placeholder="Email" required />
           </div>
-          <input type="text" id="subjek" placeholder="Subjek">
+          <input type="text" id="subjek" placeholder="Subjek" />
           <textarea id="pesan" placeholder="Pesan..." required></textarea>
           <div class="form-actions">
             <button type="submit" class="btn primary large">Kirim Pesan</button>
             <div class="muted">atau email: team@example.com</div>
           </div>
         </form>
-
         <div id="listPesan" style="margin-top:20px;"></div>
       </section>
     </main>
 
     <footer class="footer">
       <div>© <span id="year"></span> Tim Kreatif — All rights reserved</div>
-      <div class="footer-credits muted">Designed with - Alraziq</div>
+      <div class="footer-credits muted">Designed with ❤ - Alraziq</div>
     </footer>
   </div>
 
+  <!-- ---------- SCRIPT ---------- -->
   <script>
-    // Tahun otomatis
-    document.getElementById("year").textContent = new Date().getFullYear();
+    /* login logic */
+    const loginOverlay = document.getElementById('loginOverlay');
+    const portfolioPage = document.getElementById('portfolioPage');
+    const loginForm = document.getElementById('loginForm');
 
-    // LocalStorage untuk pesan
-    const form = document.getElementById("contactForm");
-    const listPesan = document.getElementById("listPesan");
-    let semuaPesan = JSON.parse(localStorage.getItem("pesanData")) || [];
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const btn = loginForm.querySelector('.btnLogin');
+      btn.textContent = 'Signing in…';
+      setTimeout(() => {
+        loginOverlay.style.display = 'none';
+        portfolioPage.style.display = 'block';
+        document.body.style.overflow = 'auto';
+        /* trigger card animations */
+        document.querySelectorAll('.member-card, .project-card').forEach(el => {
+          el.style.animation = 'fadeSlideUp .8s ease forwards';
+        });
+      }, 800);
+    });
+
+    /* portfolio scripts (dari file Anda) */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* localStorage pesan */
+    const contactForm = document.getElementById('contactForm');
+    const listPesan = document.getElementById('listPesan');
+    let semuaPesan = JSON.parse(localStorage.getItem('pesanData')) || [];
 
     function tampilkanPesan() {
       if (semuaPesan.length === 0) {
@@ -218,7 +355,7 @@
         return;
       }
       listPesan.innerHTML = "<h3>Pesan Tersimpan:</h3>";
-      semuaPesan.forEach((p) => {
+      semuaPesan.forEach(p => {
         listPesan.innerHTML += `
           <div class="member-card" style="margin-top:12px;">
             <div class="card-body">
@@ -227,32 +364,24 @@
               <p class="bio">${p.isi}</p>
               <p class="muted" style="font-size:12px;">🕒 ${p.waktu}</p>
             </div>
-          </div>
-        `;
+          </div>`;
       });
     }
-
     tampilkanPesan();
 
-    form.addEventListener("submit", (e) => {
+    contactForm.addEventListener('submit', e => {
       e.preventDefault();
-      const nama = document.getElementById("nama").value;
-      const email = document.getElementById("email").value;
-      const isi = document.getElementById("pesan").value;
-
-      const dataBaru = {
-        nama,
-        email,
-        isi,
+      const data = {
+        nama: document.getElementById('nama').value,
+        email: document.getElementById('email').value,
+        isi: document.getElementById('pesan').value,
         waktu: new Date().toLocaleString()
       };
-
-      semuaPesan.push(dataBaru);
-      localStorage.setItem("pesanData", JSON.stringify(semuaPesan));
-
-      form.reset();
+      semuaPesan.push(data);
+      localStorage.setItem('pesanData', JSON.stringify(semuaPesan));
+      contactForm.reset();
       tampilkanPesan();
-      alert("Pesan berhasil terkirim!");
+      alert('Pesan berhasil terkirim!');
     });
   </script>
 </body>
